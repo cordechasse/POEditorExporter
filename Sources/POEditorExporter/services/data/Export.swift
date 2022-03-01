@@ -7,11 +7,8 @@
 
 import Foundation
 
-struct Export : Codable {
+struct Export {
 	var url : String
-	
-	enum CodingKeys: String, CodingKey {
-        case url
-	}
-	
 }
+
+extension Export : Codable { }

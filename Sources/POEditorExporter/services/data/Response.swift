@@ -20,16 +20,11 @@ struct Response<T : Codable> : Codable {
 }
 
 
-struct ResponseResult : Codable {
+struct ResponseResult {
 	var status : String
 	var code : String
 	var message : String
-	
-	enum CodingKeys: String, CodingKey {
-        case status
-		case code
-		case message
-    }
-	
 }
+
+extension ResponseResult : Codable { }
 

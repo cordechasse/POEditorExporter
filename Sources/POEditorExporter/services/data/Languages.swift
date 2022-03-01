@@ -7,25 +7,19 @@
 
 import Foundation
 
-struct Languages : Codable {
+struct Languages {
 	var languages : [Language]
-	
-	enum CodingKeys: String, CodingKey {
-        case languages
-    }
-	
 }
 
+extension Languages : Codable { }
 
-struct Language : Codable {
+
+struct Language  {
 	var name : String
 	var code : String
-	
-	enum CodingKeys: String, CodingKey {
-        case name
-		case code
-    }
 }
+
+extension Language : Codable { }
 
 
 
