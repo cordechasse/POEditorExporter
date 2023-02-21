@@ -57,15 +57,15 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--token 05e980b491c434ddd9b510735e7b6273"
+            argument = "--token XXX"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--project_id 133927"
+            argument = "--project_id XXX"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--output /Users/nicolasbush/Desktop/poeditorexporter"
+            argument = "/Users/nicolasbush/Desktop/poeditorexporter"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
