@@ -10,7 +10,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.1.3"),
-        .package(url: "https://github.com/mxcl/Path.swift", from: "1.4.0"),
         .package(url: "https://github.com/jkandzi/Progress.swift", from: "0.4.0")
     ],
     targets: [
@@ -20,7 +19,6 @@ let package = Package(
             name: "POEditor",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .product(name: "Path", package: "Path.swift"),
                 .product(name: "Progress", package: "Progress.swift"),
             ]),
         .testTarget(

@@ -4,7 +4,6 @@
 
 import Foundation
 import ArgumentParser
-import Path
 import Progress
 
 public struct FetchTranslationsCommand: AsyncParsableCommand {
@@ -16,13 +15,13 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
     var project_id: String
     
     @Option(help: "output directory path")
-    var output : Path
+    var output : String
     
     /// Configuration for ParsableCommand
     public static let configuration = CommandConfiguration(
         commandName: "export",
-        abstract: "Export tool",
-        version: "2.0.0"
+        abstract: "Export translations tool",
+        version: "2.0.1"
     )
     
     public init() {}
@@ -34,8 +33,10 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
         print("> project_id=\(project_id)")
         print("> output=\(output)")
         
+        let outputUrl = URL(fileURLWithPath: output, isDirectory: true)
         
-        let apiHandler = POEditorAPIHandler(token: token, projectId: project_id)
+        let poEditorConfiguration = POEditorConfiguration(apiPath: "https://api.poeditor.com/v2", apiToken: token, projectId: project_id)
+        let apiHandler = POEditorAPIHandler(configuration : poEditorConfiguration)
         
         // Get the languages liste
         let languages = try await apiHandler.getLanguages()
@@ -45,7 +46,7 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
         
         // Create the target directories
         try languages.forEach {
-            let targetDirectory = $0.getTargetDirectory(from: output)
+            let targetDirectory = $0.getTargetDirectory(from: outputUrl)
             try FileManager.default.createDirectory(at: targetDirectory, withIntermediateDirectories: true, attributes: nil)
         }
         
@@ -64,7 +65,7 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
                     do {
                         let url = try await apiHandler.getTranslationFileURL(language: language.code, type: .appleStrings)
                         
-                        let translationFileUrl = language.getTargetTranslationFile(from: output)
+                        let translationFileUrl = language.getTargetTranslationFile(from: outputUrl)
                         
                         // Delete any existing translationFile
                         if FileManager.default.fileExists(atPath: translationFileUrl.path) {
@@ -81,7 +82,7 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
                             let nsDic = NSDictionary(dictionary: infoPlistTranslations)
                             let str = nsDic.descriptionInStringsFileFormat
                             
-                            let targetDirectory = language.getTargetDirectory(from: output)
+                            let targetDirectory = language.getTargetDirectory(from: outputUrl)
                             let infoPlistStringFile = targetDirectory.appendingPathComponent("InfoPlist.strings")
                             try str.write(to: infoPlistStringFile, atomically: true, encoding: .utf8)
                         }
@@ -99,6 +100,7 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
                 }
             }
             
+            progressBar.next()
             
             // Display final result
             let failedItems = await failureStore.items
@@ -107,6 +109,10 @@ public struct FetchTranslationsCommand: AsyncParsableCommand {
                 print("☠️ Download(s) failed on \(failedItems.map { $0.code })")
             }
             else {
+                let report = Report()
+                try? report.writeReport(toDirectory: outputUrl,
+                                        cliVersion: FetchTranslationsCommand.configuration.version,
+                                        config: poEditorConfiguration, languages: languages)
                 print("🏁 Export successfull")
             }
         }

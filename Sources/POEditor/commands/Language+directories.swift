@@ -3,15 +3,14 @@
 //
 
 import Foundation
-import Path
 
 extension Language {
     
-    func getTargetDirectory(from output: Path) -> URL {
-        output.url.appendingPathComponent("\(code).lproj", isDirectory: true)
+    func getTargetDirectory(from output: URL) -> URL {
+        output.appendingPathComponent("\(code).lproj", isDirectory: true)
     }
     
-    func getTargetTranslationFile(from output: Path) -> URL {
+    func getTargetTranslationFile(from output: URL) -> URL {
         let directory = getTargetDirectory(from: output)
         return directory.appendingPathComponent("Localizable.strings")
     }

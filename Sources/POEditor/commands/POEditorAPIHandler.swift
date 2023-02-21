@@ -6,14 +6,13 @@ import Foundation
 
 class POEditorAPIHandler {
     
-    private let poEditorConfiguration : POEditorConfiguration
+    private let configuration : POEditorConfiguration
     
     /// Constructor
     /// - Parameters:
-    ///   - token: the readonly token
-    ///   - projectId: the project id
-    init(token : String, projectId : String) {
-        poEditorConfiguration = POEditorConfiguration(apiPath: "https://api.poeditor.com/v2", apiToken: token, projectId: projectId)
+    ///   - conbfiguration: the config
+    init(configuration : POEditorConfiguration) {
+        self.configuration = configuration
     }
     
 }
@@ -25,7 +24,7 @@ extension POEditorAPIHandler : LanguagesFetcher {
     /// - Returns: List of available languages
     func getLanguages() async throws -> [Language] {
         
-        let request = POEditorService.getLanguages(configuration: poEditorConfiguration)
+        let request = POEditorService.getLanguages(configuration: configuration)
         let response : POEditorResponse<Languages> = try await request.fetch()
         return response.result.languages
     }
@@ -38,7 +37,7 @@ extension POEditorAPIHandler : LanguagesFetcher {
     ///   - type: the type of export
     /// - Returns: the file URL (available 10 min)
     func getTranslationFileURL(language : String, type : ExportProjectType) async throws -> URL {
-        let request = POEditorService.export(configuration: poEditorConfiguration,
+        let request = POEditorService.export(configuration: configuration,
                                              language: language,
                                              type: type)
         let response : POEditorResponse<ExportProjectResult> = try await request.fetch()
