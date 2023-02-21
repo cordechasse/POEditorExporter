@@ -11,6 +11,6 @@ sudo make release
 ## How to use?
 
 ```console
-poeditorexporter --token {poeditor read token} --project_id {poeditor project id} --output { output directory}
+poeditor export --token {poeditor read token} --project_id {poeditor project id} --output {output directory}
 ```
 
